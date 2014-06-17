@@ -174,6 +174,10 @@ module ResqueCleaner
 
           block = filter_block
 
+          if @max_failures && @max_failures.respond_to?(:to_i) && @max_failures.to_i > 0
+            cleaner.limiter.maximum = @max_failures.to_i
+          end
+
           @count =
             case params[:action]
             when "clear" then cleaner.clear(&block)
