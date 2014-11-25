@@ -125,6 +125,10 @@ module Resque
 
               value = redis.lindex(:failed, index)
               redis.multi do
+                if options[:payload_transformer]
+                  payload = job['payload'].dup
+                  options[:payload_transformer][job]
+                end
                 Job.create(queue||job['queue'], job['payload']['class'], *job['payload']['args'])
 
                 if clear_after_requeue
